@@ -1,6 +1,4 @@
-#![feature(stmt_expr_attributes)]
-
-pub fn ndarray(n: usize, m: usize) -> Vec<Vec<usize>> {
+pub fn ndarray_ones(n: usize, m: usize) -> Vec<Vec<usize>> {
     vec![vec![1; n]; m]
 }
 
@@ -10,16 +8,14 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = ndarray(4, 4);
-        assert_eq!(
-            result,
-            #[rustfmt::skip]
-            [
-                [1, 1, 1, 1],
-                [1, 1, 1, 1],
-                [1, 1, 1, 1],
-                [1, 1, 1, 1],
-            ]
-        );
+        let result = ndarray_ones(4, 4);
+        #[rustfmt::skip]
+        let mat = vec![
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+        ];
+        assert_eq!(result, mat);
     }
 }
