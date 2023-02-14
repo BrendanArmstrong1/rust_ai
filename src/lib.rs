@@ -2,10 +2,10 @@ pub fn ndarray_ones(n: usize, m: usize) -> Vec<Vec<usize>> {
     vec![vec![1; n]; m]
 }
 
-// TODO Costruct a one dimensional array and make a manual window iterator through it
-pub fn array_window(v: &Vec<usize>, s: usize) -> &Vec<usize> {
-    println!("{:?}", s);
-    v
+pub fn generate_array(n: usize, m: usize) -> Vec<Vec<usize>> {
+    let a = (1..=(n * m)).collect::<Vec<_>>();
+    println!("{:?}", a);
+    vec![vec![0; n]; m]
 }
 
 #[cfg(test)]
@@ -13,10 +13,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn one_d_window() {
-        let arr: Vec<usize> = vec![1, 2, 3, 4];
-        let my_win = array_window(&arr, 2);
-        assert_eq!(arr, *my_win);
+    fn array_test() {
+        let arr = generate_array(2, 6);
+        assert_eq!(arr, vec![vec![1; 3]; 4]);
     }
 
     #[test]
