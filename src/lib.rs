@@ -29,7 +29,13 @@ impl Layer {
         }
     }
 
-    pub fn iter_win(&self, w: usize, h: usize) -> LayerWindow<'_> {
+    pub fn iter_win(&self, mut w: usize, mut h: usize) -> LayerWindow<'_> {
+        if w > self.body[0].len() {
+            w = self.body[0].len();
+        }
+        if h > self.body.len() {
+            h = self.body.len();
+        }
         LayerWindow {
             values: &self.body,
             x: 0,
