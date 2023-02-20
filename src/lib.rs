@@ -1,7 +1,30 @@
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct Layer {
-    pub body: Vec<Vec<usize>>,
+    body: Vec<Vec<usize>>,
+}
+
+#[derive(Debug)]
+struct LayerError {
+    details: String,
+}
+#[allow(dead_code)]
+impl LayerError {
+    fn new(msg: &str) -> Self {
+        LayerError {
+            details: msg.to_string(),
+        }
+    }
+}
+impl std::fmt::Display for LayerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.details)
+    }
+}
+impl std::error::Error for LayerError {
+    fn description(&self) -> &str {
+        &self.details
+    }
 }
 
 #[allow(dead_code)]
