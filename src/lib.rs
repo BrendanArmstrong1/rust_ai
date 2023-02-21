@@ -146,6 +146,19 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_window_limits() {
+        let arr = Layer::new(5, 5);
+        let mut arr_win = arr.iter_win(7, 2);
+        assert_eq!(
+            arr_win.next().unwrap(),
+            vec![
+                vec![&1usize, &2usize, &3usize, &4usize, &5usize],
+                vec![&6usize, &7usize, &8usize, &9usize, &10usize],
+            ],
+        );
+    }
+
+    #[test]
     fn test_window_iterator() {
         let arr = Layer::new(5, 5);
         let mut arr_win = arr.iter_win(2, 2);
