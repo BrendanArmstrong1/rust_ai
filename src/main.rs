@@ -5,8 +5,15 @@ fn main() {
     println!("{}", &image);
     let rng = (6..=6).collect::<Vec<i32>>();
     println!("{:?}", rng);
-    let mut image_crop = image.iter_win(9, 2);
+    let mut image_crop = image.iter_win(2, 2);
+    let mut image_inv = image.iter_inv(2, 2);
     println!("{:?}", image_crop.next().unwrap());
+    println!("{:?}", image_inv.next().unwrap());
+    println!("{:?}", image_inv.next().unwrap());
+    println!("{:?}", image_inv.next().unwrap());
+    println!("{:?}", image_inv.next().unwrap());
+    println!("{:?}", image_inv.next().unwrap());
+    println!("{:?}", image_inv.next().unwrap());
 }
 
 #[allow(unused)]
