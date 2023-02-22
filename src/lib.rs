@@ -173,6 +173,20 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_inverted_reverse() {
+        let arr = Layer::new(4, 4);
+        let mut arr_win_inv = arr.iter_inv(2, 2);
+        assert_eq!(
+            arr_win_inv.next().unwrap(),
+            vec![vec![&16usize, &15usize], vec![&12usize, &11usize],]
+        );
+        assert_eq!(
+            arr_win_inv.next().unwrap(),
+            vec![vec![&15usize, &14usize], vec![&11usize, &10usize],]
+        );
+    }
+
+    #[test]
     fn test_window_limits() {
         let arr = Layer::new(5, 5);
         let mut arr_win = arr.iter_win(7, 2);
