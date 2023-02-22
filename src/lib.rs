@@ -4,6 +4,33 @@ pub struct Layer {
     body: Vec<Vec<usize>>,
 }
 
+pub struct LayerWindowInvert<'a> {
+    values: &'a Vec<Vec<usize>>,
+    y: usize,
+    x: usize,
+    w: usize,
+    h: usize,
+}
+
+pub struct LayerWindow<'a> {
+    values: &'a Vec<Vec<usize>>,
+    y: usize,
+    x: usize,
+    w: usize,
+    h: usize,
+}
+
+impl std::fmt::Display for Layer {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let body = self
+            .body
+            .iter()
+            .map(|row| format!("{:?}", row))
+            .fold(String::new(), |st, row| st + &row + "\n");
+        write!(f, "{}", body)
+    }
+}
+
 #[derive(Debug)]
 struct LayerError {
     details: String,
@@ -44,11 +71,20 @@ impl Layer {
                 .collect::<Vec<Vec<usize>>>(),
         };
     }
-    pub fn iter(&self) -> impl Iterator<Item = &usize> {
-        LayerIter {
+
+    pub fn iter_inv(&self, mut w: usize, mut h: usize) -> LayerWindowInvert<'_> {
+        if w > self.body[0].len() {
+            w = self.body[0].len();
+        }
+        if h > self.body.len() {
+            h = self.body.len();
+        }
+        LayerWindowInvert {
             values: &self.body,
             x: 0,
             y: 0,
+            w,
+            h,
         }
     }
 
@@ -67,20 +103,6 @@ impl Layer {
             h,
         }
     }
-}
-
-pub struct LayerIter<'a> {
-    values: &'a Vec<Vec<usize>>,
-    y: usize,
-    x: usize,
-}
-
-pub struct LayerWindow<'a> {
-    values: &'a Vec<Vec<usize>>,
-    y: usize,
-    x: usize,
-    w: usize,
-    h: usize,
 }
 
 impl<'a> Iterator for LayerWindow<'a> {
@@ -113,30 +135,35 @@ impl<'a> Iterator for LayerWindow<'a> {
     }
 }
 
-impl<'a> Iterator for LayerIter<'a> {
-    type Item = &'a usize;
+impl<'a> Iterator for LayerWindowInvert<'a> {
+    type Item = Vec<Vec<&'a usize>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.x >= self.values[self.y].len() {
+        if self.x + self.w > self.values[self.y].len() {
             self.x = 0;
             self.y += 1;
-            if self.y >= self.values.len() {
+            if self.y + self.h > self.values.len() {
                 return None;
             }
         }
-        self.x += 1;
-        Some(&self.values[self.y][self.x - 1])
-    }
-}
 
-impl std::fmt::Display for Layer {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let body = self
-            .body
+        let mat_iter = self
+            .values
             .iter()
-            .map(|row| format!("{:?}", row))
-            .fold(String::new(), |st, row| st + &row + "\n");
-        write!(f, "{}", body)
+            .rev()
+            .skip(self.y)
+            .take(self.h)
+            .map(|row| {
+                row.iter()
+                    .rev()
+                    .skip(self.x)
+                    .take(self.w)
+                    .collect::<Vec<&usize>>()
+            })
+            .collect::<Vec<Vec<&usize>>>();
+
+        self.x += 1;
+        return Some(mat_iter);
     }
 }
 
